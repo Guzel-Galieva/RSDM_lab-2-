@@ -14,8 +14,8 @@ namespace Tasks
 
             try
             {
-                var req = "SELECT * FROM task_2.students WHERE task_2.students.id IN " +
-                          "(SELECT zachetka.student_id FROM task_2.zachetka WHERE zachetka.grade = 5)";
+                var req = "SELECT * FROM task_2.students WHERE id IN (SELECT student_id FROM task_2.zachetka " +
+                          "GROUP BY student_id HAVING MIN (grade) = 5)";
                 MySqlCommand cmd = new MySqlCommand(req, con);
 
                 MySqlDataReader dr = cmd.ExecuteReader();
