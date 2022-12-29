@@ -1,0 +1,37 @@
+stages:
+  - build
+  - run
+
+variables:
+  MYSQL_ROOT_PASSWORD: root
+
+services:
+  - name: mysql:latest
+    alias: db
+
+task_2_build:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:6.0
+  script:
+    - dotnet add package MySql.Data
+    - dotnet build lab_2/task_2/task_2.csproj
+  artifacts:
+    paths:
+      - lab_2/task_2/bin/Debug/net6.0/*
+
+task_2_run:
+  stage: run
+  image: mcr.microsoft.com/dotnet/runtime:6.0
+  before_script:
+    - apt update && apt install default-mysql-client -y
+    - mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h db < lab_2/task_2/init.sql
+    - mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h db -e "SELECT * FROM task_2.students"
+    - mysql -u root -p"$MYSQL_ROOT_PASSWORD" -h db -e "SELECT * FROM task_2.zachetka"
+  dependencies:
+    - task_2_build
+  script:
+    - dotnet lab_2/task_2/bin/Debug/net6.0/task_2.dll > result.txt
+    - cat result.txt
+  artifacts:
+    paths:
+      - result.txt

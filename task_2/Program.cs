@@ -1,5 +1,5 @@
 ﻿using System;
-using MySql.Data.MySqlClint;
+using MySql.Data.MySqlClient;
 
 namespace Tasks
 {
@@ -7,7 +7,7 @@ namespace Tasks
     {
         public static void Main(string[] args)
         {
-            string bd = @"server=db;userId=root;password=root;database=task_2";
+            string bd = @"server=db;userid=root;password=root;database=task_2";
 
             MySqlConnection con = new MySqlConnection(bd);
             con.Open();
@@ -23,7 +23,7 @@ namespace Tasks
                 List<Student> students = new List<Student>();
                 while (dr.Read())
                 {
-                    students.Add(new Student(dr.GetUint32(0), dr.GetString(1), dr.GetString(2),
+                    students.Add(new Student(dr.GetUInt32(0), dr.GetString(1), dr.GetString(2),
                         dr.GetDateTime(3)));
                 }
                 dr.Close();
